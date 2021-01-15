@@ -7,9 +7,14 @@ enum ServerStatus {
   Connecting
 }
 
+
+
 class SocketService with ChangeNotifier {
 
   ServerStatus _serverStatus = ServerStatus.Connecting;
+  IO.Socket _socket;
+  ServerStatus get serverStatus => _serverStatus;
+  IO.Socket get socket => _socket;
 
   SocketService() {
     this._initConfig();
@@ -17,24 +22,24 @@ class SocketService with ChangeNotifier {
 
   void _initConfig() async {
     print('iniciando...');
-    IO.Socket socket = IO.io('http://192.168.1.44:3000',
+    this._socket = IO.io('http://192.168.1.44:3000',
       IO.OptionBuilder()
         .setTransports(['websocket'])
         .disableAutoConnect()
         .build()
     );
 
-    socket.onConnect((_) {
+    this._socket.onConnect((_) {
       print('connect');
       this._serverStatus = ServerStatus.Online;
       notifyListeners();
     });
-    socket.onDisconnect((_) {
+    this._socket.onDisconnect((_) {
       print('disconnect');
       this._serverStatus = ServerStatus.Offline;
       notifyListeners();
     });
-    socket.on('event', (payload) {
+    this._socket.on('event', (payload) {
       print('nuevo mensaje');
       print(payload);
     });
@@ -43,10 +48,10 @@ class SocketService with ChangeNotifier {
     //     print('mensaje ' + payload['mensaje']);
     // });
 
-    socket.connect();
+    this._socket.connect();
 
   }
 
-  ServerStatus get serverStatus => _serverStatus;
+
 
 }

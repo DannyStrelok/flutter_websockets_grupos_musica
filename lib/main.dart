@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Grupos de música',
-        initialRoute: 'status',
+        initialRoute: 'home',
         routes: {
           '/': (_) => HomeScreen(),
           'status': (_) => StatusScreen()
